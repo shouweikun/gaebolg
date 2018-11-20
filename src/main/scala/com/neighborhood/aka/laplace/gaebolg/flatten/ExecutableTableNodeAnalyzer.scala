@@ -14,7 +14,7 @@ import scala.collection.mutable
 /**
   * Created by john_liu on 2018/10/30.
   *
-  * 处理JsonSchema生成List[ExcutableTableNode]
+  * 处理JsonSchema生成List[ExecutableTableNode]
   * 试图去解决复杂JsonSchema的flatten问题
   * 将复杂JsonSchema的蕴含的信息提取和封装
   *
@@ -22,23 +22,23 @@ import scala.collection.mutable
   * 1. JsonSchema的定义和分类 详情见com.finup.daas.jsonschema.schema.JsonSchema
   * 2. JsonSchema中分为两种,终结类型和非终结类型，详细定义参考方法this.isNotTerminal
   * 3. JsonSchema是非终结的,需要递归处理，直至非终结
-  * 4. JsonSchema经过处理后，最终产物的List[ExcutableTableNode]
-  * 5. ExcutableTableNode之间的关系:child ExcutableTableNode 会持有 parent ExcutableTableNode
-  * 6. ExcutableTableNode与实际需要flatten的表是1:1的关系
-  * 7. ExcutableTableNode存储了需要flatten所需的信息,详情见com.finup.daas.jsonschema.flatten.ExcutableTableNode
+  * 4. JsonSchema经过处理后，最终产物的List[ExecutableTableNode]
+  * 5. ExecutableTableNode之间的关系:child ExecutableTableNode 会持有 parent ExecutableTableNode
+  * 6. ExecutableTableNode与实际需要flatten的表是1:1的关系
+  * 7. ExecutableTableNode存储了需要flatten所需的信息,详情见com.finup.daas.jsonschema.flatten.ExecutableTableNode
   *
   * @author nbhd.aka.laplace
-  * @version 0.2.1
-  * @since 2018-11-14
+  * @version 0.2.2
+  * @since 2018-11-20
   * @note
   */
 object ExecutableTableNodeAnalyzer {
   private lazy val stubStringSchema = StringSchema()(Helpers.SchemaContext(0))
 
   /**
-    * 将一系列ExcutableTableNode flatten化
+    * 将一系列ExecutableTableNode flatten化
     *
-    * @param tableNode 待处理的ExcutableTableNode
+    * @param tableNode 待处理的ExecutableTableNode
     * @param acc       中间结果累积
     * @return
     */
@@ -55,8 +55,8 @@ object ExecutableTableNodeAnalyzer {
     * @param leafTableNodes 叶子节点
     * @return 自顶向下顺序的TableNode
     */
-  def flattenExcutableTableNodeByStack(leafTableNodes: List[ExecutableTableNode]): List[ExecutableTableNode] = {
-    if (leafTableNodes.isEmpty) return List.empty;
+  def flattenExecutableTableNodeByStack(leafTableNodes: List[ExecutableTableNode]): List[ExecutableTableNode] = {
+    if (leafTableNodes.isEmpty) return List.empty
     val stack = new mutable.Stack[ExecutableTableNode]
 
     @tailrec
@@ -81,11 +81,11 @@ object ExecutableTableNodeAnalyzer {
     * @return
     */
   def ExecuteTopDown[R](leafTableNodes: List[ExecutableTableNode])(f: ExecutableTableNode => R): List[R] = {
-    flattenExcutableTableNodeByStack(leafTableNodes).map(x => f(x))
+    flattenExecutableTableNodeByStack(leafTableNodes).map(x => f(x))
   }
 
   /**
-    * 生成ExcutableTableNode的入口方法
+    * 生成ExecutableTableNode的入口方法
     *
     * @param jsonSchema                   待处理的jsonSchema
     * @param dep                          依赖的ExcutableNodes
@@ -148,6 +148,7 @@ object ExecutableTableNodeAnalyzer {
 
   /**
     * 处理终结类型的JsonSchema
+    * 2018-11-20 更新针对全非终结情况
     *
     * @param properties (fieldName ->待处理的JsonSchema)
     * @param dep        依赖的TableNode
@@ -157,8 +158,7 @@ object ExecutableTableNodeAnalyzer {
     */
   @inline
   private def handleTerminalSchemas(properties: Map[String, JsonSchema], dep: List[ExecutableTableNode] = List.empty, tableName: String, path: List[String] = List.empty, isArrayNested: Boolean = false): List[ExecutableTableNode] = {
-    if (properties.isEmpty) return List.empty
-    val fields = properties.map { case (key, js) => generateTableFieldInfoBySingleTerminalSchema(js, key, path) }.toList
+    val fields = if (properties.isEmpty) properties.map { case (key, js) => generateTableFieldInfoBySingleTerminalSchema(js, key, path) }.toList else List.empty
     List(ExecutableTableNode(tableName, fields, dep, isArrayNested, path))
   }
 
@@ -355,22 +355,22 @@ object ExecutableTableNodeAnalyzer {
   @inline
   private def getTypeInfo(jsonSchema: JsonSchema, splitMark: Boolean): Option[String] = if (splitMark) Option(jsonSchema.getType.head) else None
 
-  def main(args: Array[String]): Unit = {
-    import org.json4s._
-    import org.json4s.jackson.JsonMethods._
-    import org.json4s.jackson.Serialization
-    import org.json4s.jackson.Serialization.{read, write}
-    implicit val format = DefaultFormats
-    val json1 = ("""{"a":1,"b":{"b1":[[{"bb1":1,"bb2":[[[2]]]},{"bb2":1,"bb3":2}]],"b3":2,"b4":{"bb41":1}},"c":[[[1]]],"d":[[[[[{"d1":"fuck"}]]]]],"e":["1,ssd"]}""")
-    val json1schema = JsonSchemaUtils.getJsonSchema(json1).get
-    val json2 = ("""{"a":1,"b":{"b1":{"bb2":1,"bb3":2},"b3":2,"b4":{"bb41":1}}}""")
-    val json2schema = JsonSchemaUtils.getJsonSchema(json2).get
-    val mergeJson = JsonSchemaUtils.mergeSchema(json1schema, json2schema)
-    println(pretty(mergeJson.toJson))
-    val a = recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json1schema, name = "temp")
-
-    println(pretty(parse(write(a))))
-  }
+  //  def main(args: Array[String]): Unit = {
+  //    import org.json4s._
+  //    import org.json4s.jackson.JsonMethods._
+  //    import org.json4s.jackson.Serialization
+  //    import org.json4s.jackson.Serialization.{read, write}
+  //    implicit val format = DefaultFormats
+  //    val json1 = ("""{"a":1,"b":{"b1":[[{"bb1":1,"bb2":[[[2]]]},{"bb2":1,"bb3":2}]],"b3":2,"b4":{"bb41":1}},"c":[[[1]]],"d":[[[[[{"d1":"fuck"}]]]]],"e":["1,ssd"]}""")
+  //    val json1schema = JsonSchemaUtils.getJsonSchema(json1).get
+  //    val json2 = ("""{"a":1,"b":{"b1":{"bb2":1,"bb3":2},"b3":2,"b4":{"bb41":1}}}""")
+  //    val json2schema = JsonSchemaUtils.getJsonSchema(json2).get
+  //    val mergeJson = JsonSchemaUtils.mergeSchema(json1schema, json2schema)
+  //    println(pretty(mergeJson.toJson))
+  //    val a = recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json1schema, name = "temp")
+  //
+  //    println(pretty(parse(write(a))))
+  //  }
 }
 
 

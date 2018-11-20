@@ -665,7 +665,7 @@ class ExecutableTableNodeSpec extends UnitSpec {
   "test 10" should "correctly build flattenSchema" in {
     val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json10Schema, name = "d.x")
     assert(list.size == 1)
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.forall(_.depth <= 3))
     assert(flattenList.size == 3)
     val oringalList = flattenList
@@ -684,13 +684,13 @@ class ExecutableTableNodeSpec extends UnitSpec {
   "test 9 " should "correctly build flattenSchema where only stringschema exist all other terminal schema Is ignored" in {
     val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json9Schema, name = "d.x")
     assert(list.size == 1)
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.size == 1)
   }
   "test 8" should "correctly build flattenSchema where ignore nullschema" in {
     val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json8Schema)
     assert(list.size == 8)
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.size == 9)
   }
   "test 7 " should "correctly build flattenSchema where product split table carrys arrayNest info " in {
@@ -702,14 +702,14 @@ class ExecutableTableNodeSpec extends UnitSpec {
     assert(list.size == 1)
     assert(list(0).isArrayNested)
     assert(list(0).allTableFieldInfo.size == 4)
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.size == 1)
   }
   "test 5" should "correctly build flattenSchema where contains type info in tableName on split" in {
     val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json5Schema)
     assert(list.size == 2)
     assert(list.forall(x => x.tableName.contains("object") || x.tableName.contains("array")))
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.size == 2)
   }
   "test 4" should "correctly build flattenSchema where are object nesting object" in {
@@ -717,7 +717,7 @@ class ExecutableTableNodeSpec extends UnitSpec {
     assert(list.size == 1)
     assert(list(0).currentTableFields.size == 3)
     assert(list(0).allTableFieldInfo.size == 7)
-    val flattenList = ExecutableTableNodeAnalyzer.flattenExcutableTableNodeByStack(list)
+    val flattenList = ExecutableTableNodeAnalyzer.flattenExecutableTableNodeByStack(list)
     assert(flattenList.size == 3)
 
   }
