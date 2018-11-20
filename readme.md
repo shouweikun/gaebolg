@@ -21,8 +21,8 @@ First of all, really appreciate [schema-guru](https://github.com/snowplow/schema
 首先，非常感谢[schema-guru](https://github.com/snowplow/schema-guru)，受了很多启发
 
 ### Why I made this?
-   Currently, in my company, there are lots of data stored as JSON, including but not limited to MongoDB,App logs. JSON now is popular with the whole world and more and more people become familiar with it, but there comes a so wired requirement that we have to transform json and flat it into several tables based on relational database model... Large quantities of table and lack of time, we need to find some ways to make this process more automatic instead of manually making the JSON schema, flatting the JSON data according to the schema. What's worse, for some reason, no one knows the precise JSON schema(seems terribly annoying,huh). So I made this project to help me easily generate and flat json schema and hope to make json data flatting automatically.
-
+   Currently, in my company, there are lots of data stored as JSON, including but not limited to MongoDB,App logs. JSON now is popular with the whole world and more and more people become familiar with it, but there comes a so wired requirement that we have to transform json and flat it into several tables based on relational database model... Large quantities of table and lack of time, we need to find some ways to make this process more automatic instead of manually making the JSON schema, flatting the JSON data according to the schema. What's worse, for some reason, no one knows the precise JSON schema(seems terribly annoying,huh). So I made this tool to help me easily generate and flat json schema and hope to make json data flatting automatically.
+  
 ### QuickStart
 //todo 
 
