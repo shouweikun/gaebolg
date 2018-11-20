@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.finup.daas</groupId>
-    <artifactId>jsonschema</artifactId>
-    <version>1.2.6-RC1</version>
+    <groupId>com.neighborhood.aka.laplace</groupId>
+    <artifactId>gaebolg</artifactId>
+    <version>0.1.0</version>
     <properties>
         <scala.version>2.10.6</scala.version>
         <scala.binary.version>2.10</scala.binary.version>
