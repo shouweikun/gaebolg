@@ -1,0 +1,29 @@
+ass
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.project
+.settings
+.classpath
+target
+
+# logs #
+logs
+# idea #
+.idea
+*.idea
+*.iml
+/bin/*
+
+Servers
+.metadata
+
+
+package.json
+node_modules
+.DS_Store
+logs
+data/log
+data

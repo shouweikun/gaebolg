@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.finup.daas</groupId>
+    <artifactId>jsonschema</artifactId>
+    <version>1.2.6-RC1</version>
+    <properties>
+        <scala.version>2.10.6</scala.version>
+        <scala.binary.version>2.10</scala.binary.version>
+        <scala.test.version>3.0.4</scala.test.version>
+        <scalamock.test.version>4.1.0</scalamock.test.version>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-library -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.fge/json-schema-validator -->
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>2.2.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.json4s/json4s-jackson -->
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-jackson_${scala.binary.version}</artifactId>
+            <version>3.2.10</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core -->
+        <dependency>
+            <groupId>org.scalaz</groupId>
+            <artifactId>scalaz-core_${scala.binary.version}</artifactId>
+            <version>7.0.8</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.json4s/json4s-scalaz -->
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-scalaz_${scala.binary.version}</artifactId>
+            <version>3.2.10</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.typelevel/scalaz-specs2 -->
+       <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>scalaz-specs2_${scala.binary.version}</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.specs2/specs2 -->
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_${scala.binary.version}</artifactId>
+            <version>2.3.13</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
+            <version>${scala.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scalamock</groupId>
+            <artifactId>scalamock_${scala.binary.version}</artifactId>
+            <version>${scalamock.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/descriptor.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <repositories>
+        <repository>
+            <id>puhuifinance</id>
+            <name>Maven of finupgroup.com</name>
+            <url>http://inside.finupgroup.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://inside.finupgroup.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://inside.finupgroup.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+</project>
