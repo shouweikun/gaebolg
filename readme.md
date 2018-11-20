@@ -38,6 +38,43 @@ currently depends on following libs:
 ### Guide & Explanation
   First,let me clarify some concepts
   - **JSON AST**
+   
+ >  the following code is the AST which models the structure of a JSON document as a syntax tree
+  ```scala
+sealed abstract class JValue
+case object JNothing extends JValue // 'zero' for JValue
+case object JNull extends JValue
+case class JString(s: String) extends JValue
+case class JDouble(num: Double) extends JValue
+case class JDecimal(num: BigDecimal) extends JValue
+case class JInt(num: BigInt) extends JValue
+case class JLong(num: Long) extends JValue
+case class JBool(value: Boolean) extends JValue
+case class JObject(obj: List[JField]) extends JValue
+case class JArray(arr: List[JValue]) extends JValue
+
+type JField = (String, JValue)
+```
+json4s is strictly implemented the JSON AST which can be used easily, based on this JSON AST, gaebolg designs and implements its own `JSON Schema`
+
+- **JSON Schema**
+
+  this is core concepts in gaebolg.
+  A set of JSON can be described as a complicated JSON Schema which contain a lot of JSON schema content
+  
+  we got 9 kind of [JSON Schema](https://github.com/shouweikun/gaebolg/blob/master/src/main/scala/com/neighborhood/aka/laplace/gaebolg/schema/JsonSchema.scala):
+  
+  1. ArraySchema   ->  JArray
+  2. ObjectSchema  ->  JObject
+  3. StringSchema  ->  JString
+  4. NumberSchema  ->  JDouble/JDecimal
+  5. IntegerSchema ->  JInt/JLong
+  6. BooleanSchema ->  JBool
+  7. ZeroSchema    ->  JNothing
+  8. NullSchema    ->  JNull
+  9. ProductSchema ->  [*]
+  
+  > productSchema is a special case, it is for multiple schemas in the same position(always happen in merge schema)
   
 ### QuickStart
 //todo 
