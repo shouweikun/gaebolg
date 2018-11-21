@@ -125,29 +125,5 @@
 
     </build>
 
-    <repositories>
-        <repository>
-            <id>puhuifinance</id>
-            <name>Maven of finupgroup.com</name>
-            <url>http://inside.finupgroup.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://inside.finupgroup.com/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://inside.finupgroup.com/nexus/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
 
 </project>
