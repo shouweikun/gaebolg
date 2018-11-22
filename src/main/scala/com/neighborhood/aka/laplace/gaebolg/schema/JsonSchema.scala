@@ -275,8 +275,8 @@ object JsonSchema {
     */
   @inline
   private def handleStringSchema(jsonValue: json4s.JValue): StringSchema = {
-    lazy val minLength = (jsonValue \ "minLength").toOption.map(_.extract[Int])
-    lazy val maxLength = (jsonValue \ "maxLength").toOption.map(_.extract[Int])
+    lazy val minLength = Try((jsonValue \ "minLength")).map(_.extract[Int]).toOption
+    lazy val maxLength = Try((jsonValue \ "maxLength")).map(_.extract[Int]).toOption
     StringSchema(minLength = minLength, maxLength = maxLength)
   }
 
@@ -292,8 +292,8 @@ object JsonSchema {
     */
   @inline
   private def handleIntegerSchema(jsonValue: json4s.JValue): IntegerSchema = {
-    lazy val maximum = (jsonValue \ "maximum").toOption.map(_.extract[BigInt])
-    lazy val minimum = (jsonValue \ "minimum").toOption.map(_.extract[BigInt])
+    lazy val maximum = Try((jsonValue \ "maximum")).map(_.extract[BigInt]).toOption
+    lazy val minimum = Try((jsonValue \ "minimum")).map(_.extract[BigInt]).toOption
     IntegerSchema(maximum = maximum, minimum = minimum)
   }
 
@@ -364,8 +364,8 @@ object JsonSchema {
     * @return
     */
   private def handleNumberSchema(jsonValue: json4s.JValue): NumberSchema = {
-    lazy val maximum = (jsonValue \ "maximum").toOption.map(_.extract[Double])
-    lazy val minimum = (jsonValue \ "minimum").toOption.map(_.extract[Double])
+    lazy val maximum = Try((jsonValue \ "maximum")).map(_.extract[Double]).toOption
+    lazy val minimum = Try(jsonValue \ "minimum").map(_.extract[Double]).toOption
     NumberSchema(maximum = maximum, minimum = minimum)
   }
 }
