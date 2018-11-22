@@ -158,7 +158,7 @@ object ExecutableTableNodeAnalyzer {
     */
   @inline
   private def handleTerminalSchemas(properties: Map[String, JsonSchema], dep: List[ExecutableTableNode] = List.empty, tableName: String, path: List[String] = List.empty, isArrayNested: Boolean = false): List[ExecutableTableNode] = {
-    val fields = if (properties.isEmpty) properties.map { case (key, js) => generateTableFieldInfoBySingleTerminalSchema(js, key, path) }.toList else List.empty
+    val fields = if (properties.nonEmpty) properties.map { case (key, js) => generateTableFieldInfoBySingleTerminalSchema(js, key, path) }.toList else List.empty
     List(ExecutableTableNode(tableName, fields, dep, isArrayNested, path))
   }
 
