@@ -1,9 +1,8 @@
 package com.neighborhood.aka.laplace.gaebolg
 
-import com.neighborhood.aka.laplace.gaebolg.schema.types.ZeroSchema
-import com.finup.daas.jsonschema.schema.JsonSchema
 import com.neighborhood.aka.laplace.gaebolg.exception.InvalidSchemaJsonException
 import com.neighborhood.aka.laplace.gaebolg.generators.{SchemaGenerator, SchemaGeneratorNonRec}
+import com.neighborhood.aka.laplace.gaebolg.schema.types.ZeroSchema
 import com.neighborhood.aka.laplace.gaebolg.schema.{Helpers, JsonSchema}
 
 import scala.annotation.tailrec

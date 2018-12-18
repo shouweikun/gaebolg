@@ -1,5 +1,7 @@
 package com.neighborhood.aka.laplace.gaebolg.generators
 
+import java.util.UUID
+
 import com.neighborhood.aka.laplace.gaebolg.generators.SchemaGeneratorNonRec.FieldKey
 
 import scalaz._

@@ -28,7 +28,7 @@ final case class BooleanSchema(implicit val schemaContext: SchemaContext) extend
   def toJson = ("type" -> "boolean")
 
   def mergeSameType(implicit schemaContext: SchemaContext) = {
-    case BooleanSchema(`schemaContext`) => BooleanSchema()
+    case BooleanSchema() => BooleanSchema()
   }
 
   def getType = Set("boolean")

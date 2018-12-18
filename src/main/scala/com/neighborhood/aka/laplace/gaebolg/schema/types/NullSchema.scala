@@ -28,7 +28,7 @@ final case class NullSchema(implicit val schemaContext: SchemaContext) extends J
   def toJson = ("type" -> "null")
 
   def mergeSameType(implicit schemaContext: SchemaContext): PartialFunction[JsonSchema, JsonSchema] = {
-    case NullSchema(`schemaContext`) => NullSchema()
+    case NullSchema() => NullSchema()
   }
 
   def getType = Set("null")

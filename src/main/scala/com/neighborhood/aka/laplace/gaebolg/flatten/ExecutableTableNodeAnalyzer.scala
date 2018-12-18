@@ -1,11 +1,9 @@
 package com.neighborhood.aka.laplace.gaebolg.flatten
 
+import com.neighborhood.aka.laplace.gaebolg.exception.InvalidJsonSchemaTypeException
 import com.neighborhood.aka.laplace.gaebolg.flatten.ExecutableTableNode.TableFieldInfo
 import com.neighborhood.aka.laplace.gaebolg.flatten.FlattenJsonSchemaType.FlattenArraySchema
 import com.neighborhood.aka.laplace.gaebolg.schema.types._
-import com.finup.daas.jsonschema.schema.JsonSchema
-import com.neighborhood.aka.laplace.gaebolg.JsonSchemaUtils
-import com.neighborhood.aka.laplace.gaebolg.exception.InvalidJsonSchemaTypeException
 import com.neighborhood.aka.laplace.gaebolg.schema.{Helpers, JsonSchema}
 
 import scala.annotation.tailrec
@@ -34,6 +32,7 @@ import scala.collection.mutable
   */
 object ExecutableTableNodeAnalyzer {
   private lazy val stubStringSchema = StringSchema()(Helpers.SchemaContext(0))
+  private lazy val MongoDateSchemaStub = FlattenJsonSchemaType.MongoDateSchemaStub
 
   /**
     * 将一系列ExecutableTableNode flatten化
@@ -108,10 +107,11 @@ object ExecutableTableNodeAnalyzer {
                                                                   splitMark: Boolean = false
                                                                 ): List[ExecutableTableNode] = {
     jsonSchema match {
+      case js if (!isNotTerminal(js)) => tableNameIfTerminalTypePutIn.fold(throw new InvalidJsonSchemaTypeException(s"cannot handle terminal json type:${jsonSchema.getType},flattenType:${FlattenJsonSchemaType.getFlattenJsonSchemaType(jsonSchema)}"))(tbName => handleSingleTerminalSchema(jsonSchema, name, path, dep, tbName))
       case objectSchema: ObjectSchema => handleObjectSchema(objectSchema, dep, name, path, isArrayNested, splitMark)
       case productSchema: ProductSchema => handleProductSchema(productSchema, dep, name, path, isArrayNested)
       case arraySchema: ArraySchema if (isNotTerminal(arraySchema)) => handleArrayNestNotTerminalSchema(arraySchema, dep, name, path)
-      case _ => tableNameIfTerminalTypePutIn.fold(throw new InvalidJsonSchemaTypeException(s"cannot handle terminal json type:${jsonSchema.getType},flattenType:${FlattenJsonSchemaType.getFlattenJsonSchemaType(jsonSchema)}"))(tbName => handleSingleTerminalSchema(jsonSchema, name, path, dep, tbName))
+
     }
   }
 
@@ -190,13 +190,16 @@ object ExecutableTableNodeAnalyzer {
     */
   @inline
   private def generateTableFieldInfoBySingleTerminalSchema(jsonSchema: JsonSchema, name: String, path: List[String]): TableFieldInfo = {
-    val js = if (jsonSchema.isInstanceOf[ProductSchema]) {
-      jsonSchema.asInstanceOf[ProductSchema].types.filter(!_.isInstanceOf[NullSchema]) match {
+
+    val js = jsonSchema match {
+      case x: ProductSchema => x.types.filter(!_.isInstanceOf[NullSchema]) match {
         case hd :: Nil => hd //让ProductSchema(nullSchema,xSchema)的xSchema提取出来
         case Nil => throw new RuntimeException("this cannot be happen!")
         case _ => stubStringSchema //如果是多个非空终结型，强行String
       }
-    } else jsonSchema
+      case ObjectSchema(content) if (isMongoDate(content)) => MongoDateSchemaStub
+      case _ => jsonSchema
+    }
     val (_, finalKey, finalPath, flattenJsonSchemaTypeOption) = deStructNestFromArraySchema(js, name, path, needGetFlattenArraySchema = true) //对schema进行去ArraySchema
     TableFieldInfo(finalKey, finalPath, flattenJsonSchemaTypeOption.get)
   }
@@ -308,10 +311,22 @@ object ExecutableTableNodeAnalyzer {
     */
   @inline
   private def isNotTerminal(jsonSchema: JsonSchema): Boolean = jsonSchema match {
-    case _: ObjectSchema => true
+    case ObjectSchema(content) => !isMongoDate(content)
     case productSchema: ProductSchema if (productSchema.types.exists(isNotTerminal(_))) => true
     case ArraySchema(content) => isNotTerminal(content)
     case _ => false
+  }
+
+  /**
+    * 增加MOngo时间类型的特殊判断，如果是MongoDate，则为非终结符
+    *
+    * @since 2018-12-17
+    * @param content
+    * @return
+    */
+  @inline
+  private def isMongoDate(content: Map[String, JsonSchema]): Boolean = {
+    content.size == 1 && content.get("$date").fold(false)(js => js.isInstanceOf[StringSchema])
   }
 
   /**

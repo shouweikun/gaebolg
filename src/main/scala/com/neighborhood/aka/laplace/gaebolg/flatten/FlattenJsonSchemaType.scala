@@ -1,6 +1,6 @@
 package com.neighborhood.aka.laplace.gaebolg.flatten
 
-import com.neighborhood.aka.laplace.gaebolg.schema.JsonSchema
+import com.neighborhood.aka.laplace.gaebolg.schema.{Helpers, JsonSchema}
 import com.neighborhood.aka.laplace.gaebolg.schema.types._
 
 /**
@@ -22,11 +22,14 @@ object FlattenJsonSchemaType {
 
   case object FlattenZeroSchema extends FlattenJsonSchemaType
 
+  case object FlattenMongoDateSchema extends FlattenJsonSchemaType
 
   case class FlattenArraySchema(content: FlattenJsonSchemaType) extends FlattenJsonSchemaType
 
+  lazy val MongoDateSchemaStub = StringSchema(pattern = Option("mongoDate"))(Helpers.SchemaContext(0))
 
   def getFlattenJsonSchemaType(js: JsonSchema): FlattenJsonSchemaType = js match {
+    case `MongoDateSchemaStub` => FlattenMongoDateSchema
     case _: IntegerSchema => FlattenIntegerSchema
     case _: NullSchema => FlattenNullSchema
     case _: StringSchema => FlattenStringSchema

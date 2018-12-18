@@ -106,7 +106,7 @@ abstract trait JsonSchema {
     * @return partial function will always return this schema
     */
   def mergeWithZero: PartialFunction[JsonSchema, JsonSchema] = {
-    case ZeroSchema(_) => this
+    case ZeroSchema() => this
   }
 
   /**
@@ -185,7 +185,7 @@ object JsonSchema {
     * @param jsonSchema2 待判断的JsonSchema2
     * @return
     */
-  private[jsonschema] def isSameJsonSchema(jsonSchema1: JsonSchema, jsonSchema2: JsonSchema): Boolean = {
+  private[gaebolg] def isSameJsonSchema(jsonSchema1: JsonSchema, jsonSchema2: JsonSchema): Boolean = {
     @inline
     def judgeByType(schemaType: String): Boolean = schemaType match {
       case "string" => jsonSchema1.toJson.toString == jsonSchema2.toJson.toString
@@ -213,7 +213,7 @@ object JsonSchema {
     * @param schemaJson the json string which describes json schema.
     * @return
     */
-  private[jsonschema] def fromSchemaJson(schemaJson: String): Try[JsonSchema] = Try {
+  private[gaebolg] def fromSchemaJson(schemaJson: String): Try[JsonSchema] = Try {
     val parsedJson = parse(schemaJson)
     recursivelyGenerateJsonSchema(parsedJson)
   }

@@ -14,10 +14,8 @@ package com.finup.daas.jsonschema
 package schema
 
 import com.neighborhood.aka.laplace.gaebolg.generators.SchemaGenerator
-import com.neighborhood.aka.laplace.gaebolg.Helpers.SchemaContext
 import com.neighborhood.aka.laplace.gaebolg.schema.Helpers
-import com.neighborhood.aka.laplace.gaebolg.schema.types.ProductSchema
-import org.json4s.jackson.Serialization._
+import com.neighborhood.aka.laplace.gaebolg.schema.Helpers.SchemaContext
 // json4s
 import org.json4s._
 import org.json4s.jackson.JsonMethods._

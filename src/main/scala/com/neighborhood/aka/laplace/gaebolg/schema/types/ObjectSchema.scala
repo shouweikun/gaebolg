@@ -14,11 +14,9 @@ package com.neighborhood.aka.laplace.gaebolg.schema.types
 
 // Scalaz
 
-import com.finup.daas.jsonschema.schema.SchemaWithTransform
 import com.neighborhood.aka.laplace.gaebolg.schema.{JsonSchema, SchemaWithTransform}
 
 import scalaz.Scalaz._
-import scalaz._
 
 // json4s
 import org.json4s.JsonDSL._

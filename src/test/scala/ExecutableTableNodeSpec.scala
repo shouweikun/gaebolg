@@ -652,6 +652,67 @@ class ExecutableTableNodeSpec extends UnitSpec {
        |  },
        |  "additionalProperties" : false
        |}""".stripMargin
+
+  val json11 =
+    """
+      |{
+      |	"_id": "5c160fc946b3650e0deb6514",
+      |	"binded_alipay_account": "138*****987",
+      |	"alipay_account": "138*****987",
+      |	"binded_alipay_account_type": "1",
+      |	"phone_binded": "138****2987",
+      |	"real_name": "1",
+      |	"login_email": "****",
+      |	"security_level": "1",
+      |	"identity_auth": "1",
+      |	"security_question": "1",
+      |	"growth_value": 0,
+      |	"have_avator": "1",
+      |	"sex": "1",
+      |	"birthday": {
+      |		"$date": "1972-04-10T16:00:00.000Z"
+      |	},
+      |	"mem_degree": "0",
+      |	"ftred": 0,
+      |	"member_medal_num": 0,
+      |	"authentication_cardid": "3****************1",
+      |	"my_rate": "0",
+      |	"praise_rate": "0.00%",
+      |	"taoqi_value": 400,
+      |	"taobao_id": "3934232168",
+      |	"member_name": "tb428890338",
+      |	"msg_id": "bc22f67a44944499a52b56fc0c4a000d",
+      |	"has_datapk": true,
+      |	"datapk": "3934232168",
+      |	"src": "106",
+      |	"apply_no": "106201812160412251",
+      |	"batch_no": "5c160fc6f4428a000d97b1cd",
+      |	"batch_time": 1544949702000,
+      |	"group": "3934232168",
+      |	"id_num": "3****************1",
+      |	"id_num_biz": "xya4ae0540772d9929ed77da7312fd41aeb499287109bb342f9a3906296650f94f20160926",
+      |	"update_time": {
+      |		"$date": "2018-12-16T08:41:45.844Z"
+      |	},
+      |	"fetch_time": {
+      |		"$date": "2018-12-16T08:41:45.000Z"
+      |	},
+      |	"parse_time": {
+      |		"$date": "2018-12-16T08:41:45.000Z"
+      |	},
+      |	"expire_time": {
+      |		"$date": "2018-12-16T08:41:45.844Z"
+      |	},
+      |	"insert_time": {
+      |		"$date": "2018-12-16T08:41:45.844Z"
+      |	},
+      |	"id_num_ds": "3****************1",
+      |	"is_id_num_ds": 1,
+      |	"id_num_biz_ds": "330************51",
+      |	"is_id_num_biz_ds": 0
+      |}
+      |
+     """.stripMargin
   lazy val json1Schema = json2JsonSchema(json1)
   lazy val json2Schema = json2JsonSchema(json2)
   lazy val json1merge2Schema = mergeSchema(json1Schema, json2Schema)
@@ -660,8 +721,13 @@ class ExecutableTableNodeSpec extends UnitSpec {
   lazy val json6Schema = json2JsonSchema(json6)
   lazy val json7Schema = json2JsonSchema(json7)
   lazy val json8Schema = schemaJson2Schema(schemaJson8)
-  val json9Schema = schemaJson2Schema(schemaJson9)
-  val json10Schema = schemaJson2Schema(schemaJson10)
+  lazy val json9Schema = schemaJson2Schema(schemaJson9)
+  lazy val json10Schema = schemaJson2Schema(schemaJson10)
+  lazy val json11Schema = json2JsonSchema(json11)
+  "test 11" should "correctly build flattenSchema which supports flattenMongoDateSchema" in {
+    val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json11Schema, name = "d.x")
+    list
+  }
   "test 10" should "correctly build flattenSchema" in {
     val list = ExecutableTableNodeAnalyzer.recuisivelyAnalyzeJsonSchemaAndGenerateExcutableTableNodes(json10Schema, name = "d.x")
     assert(list.size == 1)
