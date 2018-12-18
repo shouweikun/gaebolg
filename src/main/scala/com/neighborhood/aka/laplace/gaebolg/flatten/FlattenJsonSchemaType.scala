@@ -22,6 +22,7 @@ object FlattenJsonSchemaType {
 
   case object FlattenZeroSchema extends FlattenJsonSchemaType
 
+
   case class FlattenArraySchema(content: FlattenJsonSchemaType) extends FlattenJsonSchemaType
 
 

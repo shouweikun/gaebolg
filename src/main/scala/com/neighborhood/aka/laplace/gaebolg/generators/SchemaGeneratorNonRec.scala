@@ -38,6 +38,7 @@ class SchemaGeneratorNonRec(implicit val context: SchemaContext) extends Seriali
   private lazy val nullArraySchemaStub = ArraySchema(null) //arraySchema占位符
   private lazy val emptyObjectSchema = ObjectSchema() //objectSchema占位符
   implicit private val md = getMonoid(context) //monoid,用于JsonSchema操作
+
   /**
     * 将数据Json转化为JsonSchema的入口方法
     * 在本方法中仅做一些数据的校验
